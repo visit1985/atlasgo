@@ -20,6 +20,10 @@ func New() *Client {
 	return &Client{}
 }
 
+func NewClient() (*Client, error) {
+	return New().Init()
+}
+
 func (c *Client) WithCredentials(credentials *credentials.Credentials) *Client {
 	c.Credentials = credentials
 	return c

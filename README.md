@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"os"
 
-	common_client "github.com/visit1985/atlasgo/common/client"
+	atlas "github.com/visit1985/atlasgo/common/client"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	os.Setenv("ATLAS_USERNAME", "username")
 	os.Setenv("ATLAS_ACCESS_KEY", "secret")
 
-	client, err := common_client.New().Init()
+	client, err := atlas.NewClient()
 	if err == nil {
 		fmt.Printf("Endpoint: %s\n", client.Endpoint)
 	}
