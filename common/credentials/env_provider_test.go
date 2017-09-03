@@ -8,7 +8,6 @@ import (
 
 func TestEnvProviderRetrieve(t *testing.T) {
 	os.Clearenv()
-	os.Setenv("ATLAS_GROUP_ID", "groupid")
 	os.Setenv("ATLAS_USERNAME", "username")
 	os.Setenv("ATLAS_ACCESS_KEY", "secret")
 
@@ -16,14 +15,12 @@ func TestEnvProviderRetrieve(t *testing.T) {
 	creds, err := e.Retrieve()
 	assert.Nil(t, err, "Expect no error")
 
-	assert.Equal(t, "groupid", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "username", creds.Username, "Expect username to match")
 	assert.Equal(t, "secret", creds.AccessKey, "Expect access key to match")
 }
 
 func TestEnvProviderIsExpired(t *testing.T) {
 	os.Clearenv()
-	os.Setenv("ATLAS_GROUP_ID", "groupid")
 	os.Setenv("ATLAS_USERNAME", "username")
 	os.Setenv("ATLAS_ACCESS_KEY", "secret")
 
@@ -37,20 +34,9 @@ func TestEnvProviderIsExpired(t *testing.T) {
 	assert.False(t, e.IsExpired(), "Expect creds to not be expired after retrieve.")
 }
 
-func TestEnvProviderNoGroupID(t *testing.T) {
-	os.Clearenv()
-	os.Setenv("ATLAS_USERNAME", "username")
-	os.Setenv("ATLAS_ACCESS_KEY", "secret")
-
-	e := EnvProvider{}
-	creds, err := e.Retrieve()
-	assert.Equal(t, ErrGroupIDNotFound, err, "ErrGroupIDNotFound expected, but was %#v error: %#v", creds, err)
-}
-
 func TestEnvProviderNoUsername(t *testing.T) {
 	os.Clearenv()
 	os.Setenv("ATLAS_ACCESS_KEY", "secret")
-	os.Setenv("ATLAS_GROUP_ID", "groupid")
 
 	e := EnvProvider{}
 	creds, err := e.Retrieve()
@@ -60,7 +46,6 @@ func TestEnvProviderNoUsername(t *testing.T) {
 func TestEnvProviderNoAccessKey(t *testing.T) {
 	os.Clearenv()
 	os.Setenv("ATLAS_USERNAME", "username")
-	os.Setenv("ATLAS_GROUP_ID", "groupid")
 
 	e := EnvProvider{}
 	creds, err := e.Retrieve()

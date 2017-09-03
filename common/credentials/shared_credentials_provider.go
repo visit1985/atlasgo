@@ -73,12 +73,6 @@ func loadProfile(filename, profile string) (Value, error) {
 			"failed to get profile")
 	}
 
-	group_id, err := iniProfile.GetKey("atlas_group_id")
-	if err != nil {
-		return Value{ProviderName: SharedCredsProviderName}, errors.New(
-			fmt.Sprintf("shared credentials %s in %s did not contain atlas_group_id", profile, filename))
-	}
-
 	username, err := iniProfile.GetKey("atlas_username")
 	if err != nil {
 		return Value{ProviderName: SharedCredsProviderName}, errors.New(
@@ -92,7 +86,6 @@ func loadProfile(filename, profile string) (Value, error) {
 	}
 
 	return Value{
-		GroupID:	group_id.String(),
 		Username:	username.String(),
 		AccessKey:	access_key.String(),
 		ProviderName:	SharedCredsProviderName,

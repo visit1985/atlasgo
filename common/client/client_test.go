@@ -29,7 +29,6 @@ func (s *stubProvider) IsExpired() bool {
 func TestClient(t *testing.T) {
 	creds := credentials.NewCredentials(&stubProvider{
 		creds: credentials.Value{
-			GroupID:	"groupid",
 			Username:	"username",
 			AccessKey:	"secret",
 		},

@@ -15,7 +15,6 @@ func TestSharedCredentialsProvider(t *testing.T) {
 	creds, err := p.Retrieve()
 	assert.Nil(t, err, "Expect no error")
 
-	assert.Equal(t, "groupid", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "username", creds.Username, "Expect username to match")
 	assert.Equal(t, "secret", creds.AccessKey, "Expect access key to match")
 }
@@ -41,7 +40,6 @@ func TestSharedCredentialsProviderWithATLAS_SHARED_CREDENTIALS_FILE(t *testing.T
 
 	assert.Nil(t, err, "Expect no error")
 
-	assert.Equal(t, "groupid", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "username", creds.Username, "Expect username to match")
 	assert.Equal(t, "secret", creds.AccessKey, "Expect access key to match")
 }
@@ -55,7 +53,6 @@ func TestSharedCredentialsProviderWithATLAS_SHARED_CREDENTIALS_FILEAbsPath(t *te
 	creds, err := p.Retrieve()
 	assert.Nil(t, err, "Expect no error")
 
-	assert.Equal(t, "groupid", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "username", creds.Username, "Expect username to match")
 	assert.Equal(t, "secret", creds.AccessKey, "Expect access key to match")
 }
@@ -68,7 +65,6 @@ func TestSharedCredentialsProviderWithATLAS_PROFILE(t *testing.T) {
 	creds, err := p.Retrieve()
 	assert.Nil(t, err, "Expect no error")
 
-	assert.Equal(t, "groupid", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "username", creds.Username, "Expect username to match")
 	assert.Equal(t, "secret", creds.AccessKey, "Expect access key to match")
 }
@@ -80,7 +76,6 @@ func TestSharedCredentialsProviderColonInCredFile(t *testing.T) {
 	creds, err := p.Retrieve()
 	assert.Nil(t, err, "Expect no error")
 
-	assert.Equal(t, "groupid", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "username", creds.Username, "Expect username to match")
 	assert.Equal(t, "secret", creds.AccessKey, "Expect access key to match")
 }

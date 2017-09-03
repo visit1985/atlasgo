@@ -28,14 +28,12 @@ func TestChainProviderWithNames(t *testing.T) {
 			&stubProvider{err: errors.New("second provider error")},
 			&secondStubProvider{
 				creds: Value{
-					GroupID:	"GROUPID",
 					Username:	"USERNAME",
 					AccessKey:	"SECRET",
 				},
 			},
 			&stubProvider{
 				creds: Value{
-					GroupID:	"GROUPID",
 					Username:	"USERNAME",
 					AccessKey:	"SECRET",
 				},
@@ -46,7 +44,6 @@ func TestChainProviderWithNames(t *testing.T) {
 	creds, err := p.Retrieve()
 	assert.Nil(t, err, "Expect no error")
 	assert.Equal(t, "secondStubProvider", creds.ProviderName, "Expect provider name to match")
-	assert.Equal(t, "GROUPID", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "USERNAME", creds.Username, "Expect username to match")
 	assert.Equal(t, "SECRET", creds.AccessKey, "Expect access key to match")
 }
@@ -58,7 +55,6 @@ func TestChainProviderGet(t *testing.T) {
 			&stubProvider{err: errors.New("second provider error")},
 			&stubProvider{
 				creds: Value{
-					GroupID:	"GROUPID",
 					Username:	"USERNAME",
 					AccessKey:	"SECRET",
 				},
@@ -68,7 +64,6 @@ func TestChainProviderGet(t *testing.T) {
 
 	creds, err := p.Retrieve()
 	assert.Nil(t, err, "Expect no error")
-	assert.Equal(t, "GROUPID", creds.GroupID, "Expect group ID to match")
 	assert.Equal(t, "USERNAME", creds.Username, "Expect username to match")
 	assert.Equal(t, "SECRET", creds.AccessKey, "Expect access key to match")
 }

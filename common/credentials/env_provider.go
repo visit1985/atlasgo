@@ -8,7 +8,6 @@ import (
 const EnvProviderName = "EnvProvider"
 
 var (
-	ErrGroupIDNotFound = errors.New("ATLAS_GROUP_ID not found in environment")
 	ErrUsernameNotFound = errors.New("ATLAS_USERNAME not found in environment")
 	ErrAccessKeyNotFound = errors.New("ATLAS_ACCESS_KEY not found in environment")
 )
@@ -24,15 +23,9 @@ func NewEnvCredentials() *Credentials {
 func (e *EnvProvider) Retrieve() (Value, error) {
 	e.retrieved = false
 
-	group_id := os.Getenv("ATLAS_GROUP_ID")
-
 	username := os.Getenv("ATLAS_USERNAME")
 
 	access_key := os.Getenv("ATLAS_ACCESS_KEY")
-
-	if group_id == "" {
-		return Value{ProviderName: EnvProviderName}, ErrGroupIDNotFound
-	}
 
 	if username == "" {
 		return Value{ProviderName: EnvProviderName}, ErrUsernameNotFound
@@ -44,7 +37,6 @@ func (e *EnvProvider) Retrieve() (Value, error) {
 
 	e.retrieved = true
 	return Value{
-		GroupID:	group_id,
 		Username:	username,
 		AccessKey:	access_key,
 		ProviderName:	EnvProviderName,

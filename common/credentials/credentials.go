@@ -7,7 +7,6 @@ import (
 
 
 type Value struct {
-	GroupID string
 	Username string
 	AccessKey string
 	ProviderName string
