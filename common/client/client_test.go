@@ -35,9 +35,9 @@ func TestClient(t *testing.T) {
 		expired: true,
 	})
 
-	client, err := New().WithCredentials(creds).Init()
+	client := New().WithCredentials(creds).Init()
 
-	assert.Nil(t, err, "Expect no error")
+	assert.Nil(t, client.Error, "Expect no error")
 	assert.Equal(t, common.DefaultEndpoint, client.Endpoint, "Expect endpoint to match")
 	assert.IsType(t, &http.Client{}, client.HTTPClient, "Expected http.Client to match")
 }
@@ -48,8 +48,7 @@ func TestClientNoCreds(t *testing.T) {
 		expired: true},
 	)
 
-	client, err := New().WithCredentials(creds).Init()
+	client := New().WithCredentials(creds).Init()
 
-	assert.Equal(t, "credentials error", err.Error(), "Expect credentials error")
-	assert.Nil(t, client, "Expected no client")
+	assert.Equal(t, "credentials error", client.Error.Error(), "Expect credentials error")
 }

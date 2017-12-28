@@ -8,12 +8,11 @@ import (
 )
 
 func main() {
-	os.Setenv("ATLAS_GROUP_ID", "groupid")
 	os.Setenv("ATLAS_USERNAME", "username")
 	os.Setenv("ATLAS_ACCESS_KEY", "secret")
 
-	client, err := atlas.NewClient()
-	if err == nil {
+	client := atlas.NewClient()
+	if client.Error == nil {
 		fmt.Printf("Endpoint: %s\n", client.Endpoint)
 	}
 }
