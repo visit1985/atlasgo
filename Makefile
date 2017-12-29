@@ -1,13 +1,16 @@
 # Makefile
 
+SAMPLES := $(wildcard ./example/*)
+
 all: test build
 
-build:
-	cd ./example/client; go build
+build: $(SAMPLES)
 
 test:
-	go test ./common/credentials
-	go test ./common/client
+	go test ./common/...
 
-.PHONY: all build test
+$(SAMPLES):
+	cd $@ && go vet && go build
+
+.PHONY: all build test $(SAMPLES)
 
