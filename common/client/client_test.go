@@ -35,7 +35,7 @@ func TestClient(t *testing.T) {
 		expired: true,
 	})
 
-	client := New().WithCredentials(creds).Init()
+	client := New("groupid").WithCredentials(creds).Init()
 
 	assert.Nil(t, client.Error, "Expect no error")
 	assert.Equal(t, common.DefaultEndpoint, client.Endpoint, "Expect endpoint to match")
@@ -48,7 +48,7 @@ func TestClientNoCreds(t *testing.T) {
 		expired: true},
 	)
 
-	client := New().WithCredentials(creds).Init()
+	client := New("groupid").WithCredentials(creds).Init()
 
 	assert.Equal(t, "credentials error", client.Error.Error(), "Expect credentials error")
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/visit1985/atlasgo/common/credentials"
 	"github.com/visit1985/atlasgo/common/digest"
+	"github.com/visit1985/atlasgo/common/request"
 	"github.com/visit1985/atlasgo/common"
 )
 
@@ -12,14 +13,15 @@ type UnderlineString string
 
 type Client struct {
 	Credentials	*credentials.Credentials
+	GroupID		string
 	HTTPClient	*http.Client
 	Endpoint	string
 	Error		error
 }
 
-func New() *Client {
+func New(gid string) *Client {
 	return &Client{
-		Endpoint: common.DefaultEndpoint,
+
 		Credentials: credentials.NewCredentials(
 			&credentials.ChainProvider{
 				Providers: []credentials.Provider{
@@ -28,11 +30,9 @@ func New() *Client {
 				},
 			},
 		),
+		Endpoint: common.DefaultEndpoint,
+		GroupID: gid,
 	}
-}
-
-func NewClient() *Client {
-	return New().Init()
 }
 
 func (c *Client) WithCredentials(credentials *credentials.Credentials) *Client {
@@ -61,4 +61,8 @@ func (c *Client) Init() *Client {
 		c.HTTPClient, err = digest.NewTransport(creds.Username, creds.AccessKey).Client()
 	}
 	return c
+}
+
+func (c *Client) NewRequest(operation *request.Operation, input interface{}, output interface{}, handlers *request.Handlers) *request.Request {
+	return request.New(c.HTTPClient, c.Endpoint, operation, input, output, handlers)
 }
