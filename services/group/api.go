@@ -8,14 +8,20 @@ type GetIpWhitelistOutput []struct {
 	Comment   string `json:"comment"`
 	GroupID   string `json:"groupId"`
 	IPAddress string `json:"ipAddress,omitempty"`
-	Links     []struct {
-		Href string `json:"href"`
-		Rel  string `json:"rel"`
-	} `json:"links"`
 }
 
 func (g *Group) GetIpWhitelist() (*GetIpWhitelistOutput, error) {
 	req, out := g.GetIpWhitelistRequest()
+
+	// check for client errors before sending request
+	if g.Error != nil {
+		return out, g.Error
+	}
+
+	if req.Error != nil {
+		return out, req.Error
+	}
+
 	return out, req.Send()
 }
 
@@ -32,6 +38,7 @@ func (g *Group) GetIpWhitelistRequest() (req *request.Request, out *GetIpWhiteli
 		ReponseHandler: request.ListReponseHandler,
 	}
 
+	// TODO: add paginator
 	req = g.NewRequest(op, nil, out, handlers)
 	return req, out
 }
