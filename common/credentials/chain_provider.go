@@ -3,8 +3,7 @@ package credentials
 import "errors"
 
 var (
-	ErrNoValidProvidersFoundInChain = errors.New(`no valid providers in chain. Deprecated.
-	For verbose messaging see aws.Config.CredentialsChainVerboseErrors`)
+	ErrNoValidProvidersFoundInChain = errors.New(`no valid providers in chain`)
 )
 
 type ChainProvider struct {
@@ -31,11 +30,7 @@ func (c *ChainProvider) Retrieve() (Value, error) {
 	}
 	c.curr = nil
 
-	var err error
-	err = ErrNoValidProvidersFoundInChain
-	if c.VerboseErrors {
-		err = errors.New("no valid providers in chain")
-	}
+	err := ErrNoValidProvidersFoundInChain
 	return Value{}, err
 }
 
