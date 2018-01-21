@@ -1,18 +1,20 @@
 package main
 
 import (
-	"fmt"
-	"os"
+    "fmt"
+    "os"
 
-	atlas "github.com/visit1985/atlasgo/common/client"
+    "github.com/visit1985/atlasgo/services/group"
 )
 
 func main() {
-	os.Setenv("ATLAS_USERNAME", "username")
-	os.Setenv("ATLAS_ACCESS_KEY", "secret")
+    os.Setenv("ATLAS_USERNAME", "username")
+    os.Setenv("ATLAS_ACCESS_KEY", "access_key")
 
-	client := atlas.NewClient()
-	if client.Error == nil {
-		fmt.Printf("Endpoint: %s\n", client.Endpoint)
-	}
+    output, err := group.New("group_id").GetIpWhitelist()
+    if err == nil {
+        fmt.Printf("%s\n", output)
+    } else {
+        fmt.Printf("%s\n", err)
+    }
 }
