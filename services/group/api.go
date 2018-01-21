@@ -12,16 +12,6 @@ type GetIpWhitelistOutput []struct {
 
 func (g *Group) GetIpWhitelist() (*GetIpWhitelistOutput, error) {
 	req, out := g.GetIpWhitelistRequest()
-
-	// check for client errors before sending request
-	if g.Error != nil {
-		return out, g.Error
-	}
-
-	if req.Error != nil {
-		return out, req.Error
-	}
-
 	return out, req.Send()
 }
 

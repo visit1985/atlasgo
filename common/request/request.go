@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"net/url"
 	"errors"
+	"github.com/visit1985/atlasgo/common/client"
 )
 
 type Request struct {
-	Client                 *http.Client
+	Client                 *client.Client
 	Operation              *Operation
 	HTTPRequest            *http.Request
 	Handlers               *Handlers
@@ -23,7 +24,7 @@ type Operation struct {
 	HTTPPath   string
 }
 
-func New(client *http.Client, endpoint string, operation *Operation, input interface{}, output interface{}, handlers *Handlers) *Request {
+func New(client *client.Client, operation *Operation, input interface{}, output interface{}, handlers *Handlers) *Request {
 	method := operation.HTTPMethod
 	if method == "" {
 		method = "GET"
@@ -32,7 +33,7 @@ func New(client *http.Client, endpoint string, operation *Operation, input inter
 	httpReq, _ := http.NewRequest(method, "", nil)
 
 	var err error
-	httpReq.URL, err = url.Parse(endpoint + operation.HTTPPath)
+	httpReq.URL, err = url.Parse(client.Endpoint + operation.HTTPPath)
 
 	if err != nil {
 		httpReq.URL = &url.URL{}
@@ -53,7 +54,10 @@ func New(client *http.Client, endpoint string, operation *Operation, input inter
 }
 
 func (r *Request) Send() error {
-	var err error
+	if r.Client.Error != nil {
+		r.Error = r.Client.Error
+		return r.Error
+	}
 
 	// prepare input data for http request
 	if r.Handlers.RequestHandler != nil {
@@ -61,10 +65,10 @@ func (r *Request) Send() error {
 	}
 
 	// do the request
-	r.HTTPResponse, err = r.Client.Do(r.HTTPRequest)
+	r.HTTPResponse, r.Error = r.Client.HTTPClient.Do(r.HTTPRequest)
 
 	// transform http response
 	r.Handlers.ReponseHandler(r.HTTPResponse, &r.Output)
 
-	return err
+	return r.Error
 }

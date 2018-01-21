@@ -5,7 +5,6 @@ import (
 
 	"github.com/visit1985/atlasgo/common/credentials"
 	"github.com/visit1985/atlasgo/common/digest"
-	"github.com/visit1985/atlasgo/common/request"
 	"github.com/visit1985/atlasgo/common"
 )
 
@@ -61,8 +60,4 @@ func (c *Client) Init() *Client {
 		c.HTTPClient, err = digest.NewTransport(creds.Username, creds.AccessKey).Client()
 	}
 	return c
-}
-
-func (c *Client) NewRequest(operation *request.Operation, input interface{}, output interface{}, handlers *request.Handlers) *request.Request {
-	return request.New(c.HTTPClient, c.Endpoint, operation, input, output, handlers)
 }
