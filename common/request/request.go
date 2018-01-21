@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"errors"
 	"github.com/visit1985/atlasgo/common/client"
+	"encoding/json"
 )
 
 type Request struct {
@@ -22,6 +23,12 @@ type Operation struct {
 	Name       string
 	HTTPMethod string
 	HTTPPath   string
+}
+
+type JsonError struct {
+	Detail string `json:"detail"`
+	Error  int    `json:"error"`
+	Reason string `json:"reason"`
 }
 
 func New(client *client.Client, operation *Operation, input interface{}, output interface{}, handlers *Handlers) *Request {
@@ -66,9 +73,23 @@ func (r *Request) Send() error {
 
 	// do the request
 	r.HTTPResponse, r.Error = r.Client.HTTPClient.Do(r.HTTPRequest)
+	if r.Error != nil {
+		return r.Error
+	}
+
+	// handle http errors
+	if r.HTTPResponse.StatusCode != 200 {
+		var err JsonError
+		r.Error = json.NewDecoder(r.HTTPResponse.Body).Decode(&err)
+		if r.Error != nil {
+			return r.Error
+		}
+		r.Error = errors.New(err.Detail)
+		return r.Error
+	}
 
 	// transform http response
-	r.Handlers.ReponseHandler(r.HTTPResponse, &r.Output)
+	r.Error = r.Handlers.ResponseHandler(r.HTTPResponse, &r.Output)
 
 	return r.Error
 }

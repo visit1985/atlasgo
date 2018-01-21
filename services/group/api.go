@@ -25,7 +25,7 @@ func (g *Group) GetIpWhitelistRequest() (req *request.Request, out *GetIpWhiteli
 	out = &GetIpWhitelistOutput{}
 
 	handlers := &request.Handlers {
-		ReponseHandler: request.ListReponseHandler,
+		ResponseHandler: request.ListResponseHandler,
 	}
 
 	// TODO: add paginator
