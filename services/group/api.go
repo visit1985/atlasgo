@@ -28,7 +28,6 @@ func (g *Group) GetIpWhitelistRequest() (req *request.Request, out *GetIpWhiteli
         ResponseHandler: request.ListResponseHandler,
     }
 
-    // TODO: add paginator
     req = g.NewRequest(op, nil, out, handlers)
     return req, out
 }

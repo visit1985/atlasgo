@@ -6,6 +6,7 @@ import (
     "errors"
     "github.com/visit1985/atlasgo/common/client"
     "encoding/json"
+    "io/ioutil"
 )
 
 type Request struct {
@@ -14,6 +15,7 @@ type Request struct {
     HTTPRequest  *http.Request
     Handlers     *Handlers
     HTTPResponse *http.Response
+    Body         []byte
     Input        interface{}
     Error        error
     Output       interface{}
@@ -68,7 +70,7 @@ func (r *Request) Send() error {
 
     // prepare input data for http request
     if r.Handlers.RequestHandler != nil {
-        r.Handlers.RequestHandler(&r.Input, r.HTTPRequest)
+        r.Error = r.Handlers.RequestHandler(r, &r.Input)
     }
 
     // do the request
@@ -77,10 +79,14 @@ func (r *Request) Send() error {
         return r.Error
     }
 
+    // read the response
+    defer r.HTTPResponse.Body.Close()
+    r.Body, r.Error = ioutil.ReadAll(r.HTTPResponse.Body)
+
     // handle http errors
-    if r.HTTPResponse.StatusCode != 200 {
+    if r.HTTPResponse.StatusCode >= 400 {
         var err JsonError
-        r.Error = json.NewDecoder(r.HTTPResponse.Body).Decode(&err)
+        r.Error = json.Unmarshal(r.Body, &err)
         if r.Error != nil {
             return r.Error
         }
@@ -89,7 +95,9 @@ func (r *Request) Send() error {
     }
 
     // transform http response
-    r.Error = r.Handlers.ResponseHandler(r.HTTPResponse, &r.Output)
+    if r.Handlers.ResponseHandler != nil {
+        r.Error = r.Handlers.ResponseHandler(r, &r.Output)
+    }
 
     return r.Error
 }
