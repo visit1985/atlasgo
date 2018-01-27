@@ -12,7 +12,7 @@ type GetIpWhitelistOutput []struct {
 
 func (g *Group) GetIpWhitelist() (*GetIpWhitelistOutput, error) {
     req, out := g.GetIpWhitelistRequest()
-    return out, req.Send()
+    return out, req.Paginate()
 }
 
 func (g *Group) GetIpWhitelistRequest() (req *request.Request, out *GetIpWhitelistOutput) {

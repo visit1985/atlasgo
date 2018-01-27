@@ -13,7 +13,7 @@ func main() {
 
     output, err := group.New("group_id").GetIpWhitelist()
     if err == nil {
-        fmt.Printf("%s\n", output)
+        fmt.Printf("%+v\n", output)
     } else {
         fmt.Printf("%s\n", err)
     }
