@@ -5,8 +5,8 @@ This project is work in progress. Eventually it will become a Go SDK for the [Mo
 
 ## Package Structure
 
-*  common: common library of the Atlas Go SDK
-*  util: utilities and helpers
+*  services: API services of Atlas Go SDK
+*  common: common library of Atlas Go SDK
 
 
 ## Quick Start
@@ -24,11 +24,11 @@ func main() {
     os.Setenv("ATLAS_USERNAME", "username")
     os.Setenv("ATLAS_ACCESS_KEY", "secret")
 
-    output, err := group.New("#GROUP_ID#").GetIpWhitelist()
+    output, err := group.New("group_id").GetIpWhitelist()
     if err == nil {
-        fmt.Printf("%s\n", output)
+        fmt.Printf("%+v\n", output)
     } else {
-        fmt.Printf("%s\n", err)
+        fmt.Println(err)
        }
 }
 ```
