@@ -15,24 +15,18 @@ var (
     ErrSharedCredentialsHomeNotFound = errors.New("user home directory not found.")
 )
 
-func UserHomeDir() string {
-    if runtime.GOOS == "windows" { // Windows
-        return os.Getenv("USERPROFILE")
-    }
-
-    return os.Getenv("HOME")
-}
-
-func SharedCredentialsFilename() string {
-    return filepath.Join(UserHomeDir(), ".atlas", "credentials")
-}
-
+// A SharedCredentialsProvider retrieves credentials from the current user's home directory,
+// and keeps track if those credentials are expired.
+//
+// Profile ini file example: $HOME/.atlas/credentials
 type SharedCredentialsProvider struct {
     Filename  string
     Profile   string
     retrieved bool
 }
 
+// NewSharedCredentials returns a pointer to a new Credentials object
+// wrapping the Profile file provider.
 func NewSharedCredentials(filename, profile string) *Credentials {
     return NewCredentials(&SharedCredentialsProvider{
         Filename: filename,
@@ -40,6 +34,7 @@ func NewSharedCredentials(filename, profile string) *Credentials {
     })
 }
 
+// Retrieve reads and extracts the shared credentials from the current users home directory.
 func (p *SharedCredentialsProvider) Retrieve() (Value, error) {
     p.retrieved = false
 
@@ -57,10 +52,12 @@ func (p *SharedCredentialsProvider) Retrieve() (Value, error) {
     return creds, nil
 }
 
+// IsExpired returns if the shared credentials have expired.
 func (p *SharedCredentialsProvider) IsExpired() bool {
     return !p.retrieved
 }
 
+// loadProfiles loads from the file pointed to by shared credentials filename for profile.
 func loadProfile(filename, profile string) (Value, error) {
     config, err := ini.Load(filename)
     if err != nil {
@@ -92,6 +89,8 @@ func loadProfile(filename, profile string) (Value, error) {
     }, nil
 }
 
+// filename returns the filename to use to read shared credentials.
+// Will return an error if the user's home directory path cannot be found.
 func (p *SharedCredentialsProvider) filename() (string, error) {
     if len(p.Filename) != 0 {
         return p.Filename, nil
@@ -113,6 +112,9 @@ func (p *SharedCredentialsProvider) filename() (string, error) {
     return p.Filename, nil
 }
 
+// profile returns the shared credentials profile.
+// If empty will read environment variable "ATLAS_PROFILE".
+// If that is not set profile will return "default".
 func (p *SharedCredentialsProvider) profile() string {
     if p.Profile == "" {
         p.Profile = os.Getenv("ATLAS_PROFILE")
@@ -122,4 +124,18 @@ func (p *SharedCredentialsProvider) profile() string {
     }
 
     return p.Profile
+}
+
+// UserHomeDir returns the home directory for the user the process is running under.
+func UserHomeDir() string {
+    if runtime.GOOS == "windows" { // Windows
+        return os.Getenv("USERPROFILE")
+    }
+
+    return os.Getenv("HOME")
+}
+
+// SharedCredentialsFilename returns the SDK's default file path for the shared credentials file.
+func SharedCredentialsFilename() string {
+    return filepath.Join(UserHomeDir(), ".atlas", "credentials")
 }

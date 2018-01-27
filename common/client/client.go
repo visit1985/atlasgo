@@ -8,8 +8,7 @@ import (
     "github.com/visit1985/atlasgo/common"
 )
 
-type UnderlineString string
-
+// A Client implements the base client request and response handling used by all service clients.
 type Client struct {
     Credentials *credentials.Credentials
     GroupID     string
@@ -18,6 +17,7 @@ type Client struct {
     Error       error
 }
 
+// New will return a pointer to a new un-initialized service client.
 func New(gid string) *Client {
     return &Client{
 
@@ -34,21 +34,25 @@ func New(gid string) *Client {
     }
 }
 
+// WithCredentials will override the default Credentials Provider with the given one.
 func (c *Client) WithCredentials(credentials *credentials.Credentials) *Client {
     c.Credentials = credentials
     return c
 }
 
+// WithEndpoint will override the default Endpoint with the given one.
 func (c *Client) WithEndpoint(endpoint string) *Client {
     c.Endpoint = endpoint
     return c
 }
 
+// WithHTTPClient will override the default http.Client with the given one.
 func (c *Client) WithHTTPClient(client *http.Client) *Client {
     c.HTTPClient = client
     return c
 }
 
+// Init will initialized the service client.
 func (c *Client) Init() *Client {
     creds, err := c.Credentials.Get()
     if err != nil {
