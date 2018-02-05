@@ -10,34 +10,30 @@ import (
     "net/url"
 )
 
+func newStubRequest(response string) *Request {
+    ts := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprint(w, response)
+    }))
+    tc := ts.Client()
+    c := client.New("group").WithHTTPClient(tc).Init()
+    r := New(c, &Operation{}, nil, nil, &Handlers{})
+    r.HTTPRequest.URL, r.Error= url.Parse(ts.URL)
+    return r
+}
+
 func TestNew(t *testing.T) {
-    cli := client.New("test")
-    op := &Operation{
-        Name: "test",
-        HTTPMethod: "GET",
-        HTTPPath: "/test",
-    }
-    handlers := &Handlers{}
-    req := New(cli, op, nil, nil, handlers)
-    assert.Nil(t, req.Error, "Expect no error")
+    c := client.New("group")
+    r := New(c, &Operation{}, nil, nil, &Handlers{})
+    assert.Nil(t, r.Error, "Expect no error")
 }
 
 func TestRequest_Send(t *testing.T) {
-    ts := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintln(w, "test")
-    }))
-    tc := ts.Client()
-    cli := client.New("test").WithHTTPClient(tc).Init()
-    op := &Operation{
-        Name: "test",
-        HTTPMethod: "GET",
-        HTTPPath: "/test",
-    }
-    handlers := &Handlers{}
-    req := New(cli, op, nil, nil, handlers)
-    assert.Nil(t, req.Error, "Expect no error")
-    req.HTTPRequest.URL, req.Error= url.Parse(ts.URL)
-    req.Send()
-    assert.Nil(t, req.Error, "Expect no error")
-    assert.Equal(t, "test\n", string(req.Body))
+    r := newStubRequest("response")
+    r.Send()
+    assert.Nil(t, r.Error, "Expect no error")
+    assert.Equal(t, "response", string(r.Body))
+}
+
+func TestRequest_Paginate(t *testing.T) {
+
 }
