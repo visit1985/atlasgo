@@ -5,13 +5,13 @@ import (
     "github.com/stretchr/testify/assert"
 )
 
-type TestResponse struct {
+type testResponse struct {
     Test string `json:"test"`
 }
 
 func TestResponseHandler(t *testing.T) {
     r := newStubRequest(`{"test": "response"}`)
-    o := &TestResponse{}
+    o := &testResponse{}
     r.Output = o
     r.Handlers = &Handlers{ResponseHandler: ResponseHandler}
     r.Send()
@@ -19,13 +19,13 @@ func TestResponseHandler(t *testing.T) {
     assert.Equal(t, "response", o.Test)
 }
 
-type TestListResponse []struct {
+type testListResponse []struct {
     Test string `json:"test"`
 }
 
 func TestListResponseHandler(t *testing.T) {
     r := newStubRequest(`{"results": [ {"test": "response"}, {"test": "response2"} ]}`)
-    o := &TestListResponse{}
+    o := &testListResponse{}
     r.Output = o
     r.Handlers = &Handlers{ResponseHandler: ListResponseHandler}
     r.Send()

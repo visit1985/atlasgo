@@ -30,17 +30,17 @@ type Operation struct {
     HTTPPath   string
 }
 
-// A JsonError is the JSON structure a service API error returns.
+// A jsonError is the JSON structure a service API error returns.
 // https://docs.atlas.mongodb.com/api/#errors
-type JsonError struct {
+type jsonError struct {
     Detail string `json:"detail"`
     Error  int    `json:"error"`
     Reason string `json:"reason"`
 }
 
-// PaginationLinks is the JSON structure of the envelope around a API list response.
+// paginationLinks is the JSON structure of the envelope around a API list response.
 // https://docs.atlas.mongodb.com/api/#lists
-type PaginationLinks struct {
+type paginationLinks struct {
     Links []struct {
         Href string `json:"href"`
         Rel  string `json:"rel"`
@@ -114,7 +114,7 @@ func (r *Request) Send() error {
 
     // handle http errors
     if r.HTTPResponse.StatusCode >= 400 {
-        var err JsonError
+        var err jsonError
         r.Error = json.Unmarshal(r.Body, &err)
         if r.Error != nil {
             return r.Error
@@ -134,7 +134,7 @@ func (r *Request) Send() error {
 // NextPage will attempt to retrieve a new Request pointer for the next page of the API operation.
 // It will return nil if the page cannot be retrieved, or there are no more pages.
 func (r *Request) NextPage() *Request {
-    var attr PaginationLinks
+    var attr paginationLinks
     r.Error = json.Unmarshal(r.Body, &attr)
 
     for i := range attr.Links {
