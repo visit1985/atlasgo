@@ -24,12 +24,12 @@ func main() {
     os.Setenv("ATLAS_USERNAME", "username")
     os.Setenv("ATLAS_ACCESS_KEY", "secret")
 
-    output, err := group.New("group_id").GetIpWhitelist()
+    output, err := group.New("group_id").GetWhitelist()
     if err == nil {
         fmt.Printf("%+v\n", output)
     } else {
         fmt.Println(err)
-       }
+    }
 }
 ```
 

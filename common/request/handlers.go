@@ -2,12 +2,21 @@ package request
 
 import (
     "encoding/json"
+    "bytes"
+    "io/ioutil"
 )
 
 // A Handlers provides a collection of handlers for various stages of handling requests.
 type Handlers struct {
     RequestHandler  func(*Request, *interface{}) error
     ResponseHandler func(*Request, *interface{}) error
+}
+
+// RequestHandler encodes a structure into a JSON string
+func RequestHandler(request *Request, input *interface{}) error {
+    jsonstr, err := json.Marshal(&input)
+    request.HTTPRequest.Body = ioutil.NopCloser(bytes.NewBuffer(jsonstr))
+    return err
 }
 
 // ResponseHandler decodes a JSON string into a structure.
