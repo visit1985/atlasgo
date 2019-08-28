@@ -56,10 +56,10 @@ type GetWhitelistEntryOutput WhitelistEntry
 // The GetWhitelistEntry API operation for MongoDB Atlas Group Service retrieves an IP address from
 // a group's whitelist.
 //
-// The "input" value needs to be a string representation of an IP address or CIDR block.
+// The "in" value needs to be a string representation of an IP address or CIDR block.
 // https://tools.ietf.org/html/rfc4632
-func (g *Group) GetWhitelistEntry(input string) (*GetWhitelistEntryOutput, error) {
-    req, out := g.GetWhitelistEntryRequest(input)
+func (g *Group) GetWhitelistEntry(in string) (*GetWhitelistEntryOutput, error) {
+    req, out := g.GetWhitelistEntryRequest(in)
     return out, req.Send()
 }
 
@@ -69,13 +69,13 @@ func (g *Group) GetWhitelistEntry(input string) (*GetWhitelistEntryOutput, error
 // The "out" return value will be populated with the request's response once the request
 // completes successfully.
 //
-// The "input" value needs to be a string representation of an IP address or CIDR block.
+// The "in" value needs to be a string representation of an IP address or CIDR block.
 // https://tools.ietf.org/html/rfc4632
-func (g *Group) GetWhitelistEntryRequest(input string) (req *request.Request, out *GetWhitelistEntryOutput) {
+func (g *Group) GetWhitelistEntryRequest(in string) (req *request.Request, out *GetWhitelistEntryOutput) {
     op := &request.Operation{
         Name:       "GetWhitelistEntry",
         HTTPMethod: "GET",
-        HTTPPath:   "/groups/" + g.GroupID + "/whitelist/" + url.QueryEscape(input),
+        HTTPPath:   "/groups/" + g.GroupID + "/whitelist/" + url.QueryEscape(in),
     }
 
     out = &GetWhitelistEntryOutput{}
@@ -95,16 +95,16 @@ type SetWhitelistEntryInput []WhitelistEntry
 
 // The SetWhitelistEntry API operation for MongoDB Atlas Group Service adds an IP address or
 // CIDR block to a group's whitelist.
-func (g *Group) SetWhitelistEntry(input *SetWhitelistEntryInput) (error) {
-    req := g.SetWhitelistEntryRequest(input)
-    return req.Send()
+func (g *Group) SetWhitelistEntry(in *SetWhitelistEntryInput) (*GetWhitelistOutput, error) {
+    req, out := g.SetWhitelistEntryRequest(in)
+    return out, req.Paginate()
 }
 
 // GetWhitelistEntryRequest generates a "common/request.Request" representing the client's request
 // for the GetWhitelistEntry operation.
 //
-// The "input" value needs to be an array of whitelist entries.
-func (g *Group) SetWhitelistEntryRequest(input *SetWhitelistEntryInput) (req *request.Request) {
+// The "in" value needs to be an array of whitelist entries.
+func (g *Group) SetWhitelistEntryRequest(in *SetWhitelistEntryInput) (req *request.Request, out *GetWhitelistOutput) {
     op := &request.Operation{
         Name:       "SetWhitelistEntry",
         HTTPMethod: "POST",
@@ -112,10 +112,11 @@ func (g *Group) SetWhitelistEntryRequest(input *SetWhitelistEntryInput) (req *re
     }
 
     handlers := &request.Handlers{
-        RequestHandler: request.RequestHandler,
+        RequestHandler:  request.RequestHandler,
+        ResponseHandler: request.ListResponseHandler,
     }
 
-    req = g.newRequest(op, input, nil, handlers)
+    req = g.newRequest(op, in, out, handlers)
 
-    return req
+    return req, out
 }
