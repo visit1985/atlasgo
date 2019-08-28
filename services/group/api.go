@@ -95,9 +95,9 @@ type SetWhitelistEntryInput []WhitelistEntry
 
 // The SetWhitelistEntry API operation for MongoDB Atlas Group Service adds an IP address or
 // CIDR block to a group's whitelist.
-func (g *Group) SetWhitelistEntry(in *SetWhitelistEntryInput) (*GetWhitelistOutput, error) {
-    req, out := g.SetWhitelistEntryRequest(in)
-    return out, req.Paginate()
+func (g *Group) SetWhitelistEntry(in *SetWhitelistEntryInput) error {
+    req := g.SetWhitelistEntryRequest(in)
+    return req.Send()
 }
 
 // GetWhitelistEntryRequest generates a "common/request.Request" representing the client's request
@@ -107,23 +107,20 @@ func (g *Group) SetWhitelistEntry(in *SetWhitelistEntryInput) (*GetWhitelistOutp
 // completes successfully.
 //
 // The "in" value needs to be an array of whitelist entries.
-func (g *Group) SetWhitelistEntryRequest(in *SetWhitelistEntryInput) (req *request.Request, out *GetWhitelistOutput) {
+func (g *Group) SetWhitelistEntryRequest(in *SetWhitelistEntryInput) (req *request.Request) {
     op := &request.Operation{
         Name:       "SetWhitelistEntry",
         HTTPMethod: "POST",
         HTTPPath:   "/groups/" + g.GroupID + "/whitelist",
     }
 
-    out = &GetWhitelistOutput{}
-
     handlers := &request.Handlers{
         RequestHandler:  request.RequestHandler,
-        ResponseHandler: request.ListResponseHandler,
     }
 
-    req = g.newRequest(op, in, out, handlers)
+    req = g.newRequest(op, in, nil, handlers)
 
-    return req, out
+    return req
 }
 
 // The DeleteWhitelistEntry API operation for MongoDB Atlas Group Service deletes an IP address from
