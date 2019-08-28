@@ -103,6 +103,9 @@ func (g *Group) SetWhitelistEntry(in *SetWhitelistEntryInput) (*GetWhitelistOutp
 // GetWhitelistEntryRequest generates a "common/request.Request" representing the client's request
 // for the GetWhitelistEntry operation.
 //
+// The "out" return value will be populated with the request's response once the request
+// completes successfully.
+//
 // The "in" value needs to be an array of whitelist entries.
 func (g *Group) SetWhitelistEntryRequest(in *SetWhitelistEntryInput) (req *request.Request, out *GetWhitelistOutput) {
     op := &request.Operation{
@@ -110,6 +113,8 @@ func (g *Group) SetWhitelistEntryRequest(in *SetWhitelistEntryInput) (req *reque
         HTTPMethod: "POST",
         HTTPPath:   "/groups/" + g.GroupID + "/whitelist",
     }
+
+    out = &GetWhitelistOutput{}
 
     handlers := &request.Handlers{
         RequestHandler:  request.RequestHandler,

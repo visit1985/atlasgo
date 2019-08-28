@@ -1,12 +1,14 @@
 package request
 
 import (
-    "net/http"
-    "net/url"
-    "errors"
-    "github.com/visit1985/atlasgo/common/client"
     "encoding/json"
+    "errors"
+    "fmt"
+    "github.com/visit1985/atlasgo/common/client"
     "io/ioutil"
+    "net/http"
+    "net/http/httputil"
+    "net/url"
     "reflect"
 )
 
@@ -114,7 +116,7 @@ func (r *Request) Send() error {
     }
 
     // read the response
-    defer r.HTTPResponse.Body.Close()
+    r.Error = r.HTTPResponse.Body.Close()
     r.Body, r.Error = ioutil.ReadAll(r.HTTPResponse.Body)
 
     // handle http errors

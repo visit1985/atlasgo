@@ -18,6 +18,6 @@ func New(gid string) *Group {
 }
 
 // newRequest creates a new request for a Group operation.
-func (c *Group) newRequest(operation *request.Operation, input interface{}, output interface{}, handlers *request.Handlers) *request.Request {
-    return request.New(c.Client, operation, input, output, handlers)
+func (g *Group) newRequest(operation *request.Operation, input interface{}, output interface{}, handlers *request.Handlers) *request.Request {
+    return request.New(g.Client, operation, input, output, handlers)
 }

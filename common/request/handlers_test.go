@@ -1,8 +1,8 @@
 package request
 
 import (
-    "testing"
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 type testResponse struct {
@@ -14,7 +14,7 @@ func TestResponseHandler(t *testing.T) {
     o := &testResponse{}
     r.Output = o
     r.Handlers = &Handlers{ResponseHandler: ResponseHandler}
-    r.Send()
+    _ = r.Send()
     assert.Nil(t, r.Error, "Expect no error")
     assert.Equal(t, "response", o.Test)
 }
@@ -28,7 +28,7 @@ func TestListResponseHandler(t *testing.T) {
     o := &testListResponse{}
     r.Output = o
     r.Handlers = &Handlers{ResponseHandler: ListResponseHandler}
-    r.Send()
+    _ = r.Send()
     assert.Nil(t, r.Error, "Expect no error")
     assert.Equal(t, "response", (*o)[0].Test)
     assert.Equal(t, "response2", (*o)[1].Test)
