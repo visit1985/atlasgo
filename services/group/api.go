@@ -125,3 +125,32 @@ func (g *Group) SetWhitelistEntryRequest(in *SetWhitelistEntryInput) (req *reque
 
     return req, out
 }
+
+// The DeleteWhitelistEntry API operation for MongoDB Atlas Group Service deletes an IP address from
+// a group's whitelist.
+//
+// The "in" value needs to be a string representation of an IP address or CIDR block.
+// https://tools.ietf.org/html/rfc4632
+func (g *Group) DeleteWhitelistEntry(in string) error {
+    req := g.DeleteWhitelistEntryRequest(in)
+    return req.Send()
+}
+
+// DeleteWhitelistEntryRequest generates a "common/request.Request" representing the client's request
+// for the DeleteWhitelistEntry operation.
+//
+// The "in" value needs to be a string representation of an IP address or CIDR block.
+// https://tools.ietf.org/html/rfc4632
+func (g *Group) DeleteWhitelistEntryRequest(in string) (req *request.Request) {
+    op := &request.Operation{
+        Name:       "DeleteWhitelistEntry",
+        HTTPMethod: "DELETE",
+        HTTPPath:   "/groups/" + g.GroupID + "/whitelist/" + url.QueryEscape(in),
+    }
+
+    handlers := &request.Handlers{}
+
+    req = g.newRequest(op, nil, nil, handlers)
+
+    return req
+}
