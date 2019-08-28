@@ -44,11 +44,13 @@
 package digest
 
 import (
+    "bytes"
     "crypto/md5"
     "crypto/rand"
     "errors"
     "fmt"
     "io"
+    "io/ioutil"
     "net/http"
     "strings"
 )
@@ -56,7 +58,7 @@ import (
 var (
     ErrNilTransport      = errors.New("Transport is nil")
     ErrBadChallenge      = errors.New("Challenge is bad")
-    ErrAlgNotImplemented = errors.New("Alg not implemented")
+    ErrAlgNotImplemented = errors.New("Algorithm not implemented")
 )
 
 // Transport is an implementation of http.RoundTripper that takes care of http
@@ -238,6 +240,24 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
     req2.Header = make(http.Header)
     for k, s := range req.Header {
         req2.Header[k] = s
+    }
+
+    // Copy the request body if any
+    var err error
+    if req.Body != nil {
+        var buf bytes.Buffer
+        _, err = buf.ReadFrom(req.Body)
+        if err != nil {
+            return nil, err
+        }
+
+        err = req.Body.Close()
+        if err != nil {
+            return nil, err
+        }
+
+        req.Body = ioutil.NopCloser(&buf)
+        req2.Body = ioutil.NopCloser(bytes.NewReader(buf.Bytes()))
     }
 
     // Make a request to get the 401 that contains the challenge.
