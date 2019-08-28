@@ -56,6 +56,11 @@ func New(client *client.Client, operation *Operation, input interface{}, output 
 
     httpReq, _ := http.NewRequest(method, "", nil)
 
+    httpReq.Header.Add("Accept", "application/json")
+    if method == "POST" {
+        httpReq.Header.Add("Content-Type", "application/json")
+    }
+
     var err error
     httpReq.URL, err = url.Parse(client.Endpoint + operation.HTTPPath)
 
