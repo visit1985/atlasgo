@@ -3,15 +3,17 @@ package group
 import (
     "github.com/visit1985/atlasgo/common/request"
     "net/url"
+    "time"
 )
 
 // A WhitelistEntry is a generic JSON structure used in API operations on group IP whitelists.
 // https://docs.atlas.mongodb.com/reference/api/whitelist/#sample-entity
 type WhitelistEntry struct {
-    CidrBlock string `json:"cidrBlock,omitempty"`
-    Comment   string `json:"comment,omitempty"`
-    GroupId   string `json:"groupId,omitempty"`
-    IpAddress string `json:"ipAddress,omitempty"`
+    CidrBlock       string     `json:"cidrBlock,omitempty"`
+    Comment         string     `json:"comment,omitempty"`
+    GroupId         string     `json:"groupId,omitempty"`
+    IpAddress       string     `json:"ipAddress,omitempty"`
+    DeleteAfterDate *time.Time `json:"deleteAfterDate,omitempty"`
 }
 
 // A GetWhitelistOutput is the JSON structure a GetWhitelist API operation returns.
