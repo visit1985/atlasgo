@@ -1,4 +1,4 @@
-# WIP: AtlasGo: Go SDK for MongoDB Atlas API
+# AtlasGo: Go SDK for MongoDB Atlas API
 
 This project is work in progress. Eventually it will become a Go SDK for the [MongoDB Atlas API](https://docs.atlas.mongodb.com/api/). You are welcome for contribution.
 
