@@ -11,14 +11,13 @@ import (
 // A Client implements the base client request and response handling used by all service clients.
 type Client struct {
     Credentials *credentials.Credentials
-    GroupID     string
     HTTPClient  *http.Client
     Endpoint    string
     Error       error
 }
 
 // New will return a pointer to a new un-initialized service client.
-func New(gid string) *Client {
+func New() *Client {
     return &Client{
 
         Credentials: credentials.NewCredentials(
@@ -30,7 +29,6 @@ func New(gid string) *Client {
             },
         ),
         Endpoint: common.DefaultEndpoint,
-        GroupID: gid,
     }
 }
 

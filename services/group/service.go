@@ -5,15 +5,17 @@ import (
     "github.com/visit1985/atlasgo/common/request"
 )
 
-// Group provides the API operation methods for making requests to MongoDB Atlas Group Service.
+// Group provides the API operation methods for making requests to MongoDB Atlas in context of a Group (aka Project).
 type Group struct{
     *client.Client
+    GroupID string
 }
 
 // New creates a new instance of the Group client.
 func New(gid string) *Group {
     return &Group{
-        Client: client.New(gid).Init(),
+        Client: client.New().Init(),
+        GroupID: gid,
     }
 }
 

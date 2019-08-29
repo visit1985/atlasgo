@@ -15,14 +15,14 @@ func newStubRequest(response string) *Request {
         _, _ = fmt.Fprint(w, response)
     }))
     tc := ts.Client()
-    c := client.New("group").WithHTTPClient(tc).Init()
+    c := client.New().WithHTTPClient(tc).Init()
     r := New(c, &Operation{}, nil, nil, &Handlers{})
     r.HTTPRequest.URL, r.Error= url.Parse(ts.URL)
     return r
 }
 
 func TestNew(t *testing.T) {
-    c := client.New("group")
+    c := client.New()
     r := New(c, &Operation{}, nil, nil, &Handlers{})
     assert.Nil(t, r.Error, "Expect no error")
 }
